@@ -3,15 +3,24 @@ In simple terms, a resolver acts as a GraphQL query handler.
 Every resolver function in a GraphQL schema accepts four positional arguments 
 as given below − fieldName:(root, args, context, info) => { result } */
 
-const postResolvers = require("./posts");
+const postsResolvers = require("./posts");
 const usersResolvers = require("./users");
+const commentsResolvers = require("./comments");
 
 module.exports = {
+  Post: {
+    likeCount: (parent) => parent.likes.length,
+    commentCount: (parent) => parent.comments.length,
+  },
   Query: {
-    ...postResolvers.Query,
+    ...postsResolvers.Query,
   },
   Mutation: {
     ...usersResolvers.Mutation,
-    ...postResolvers.Mutation,
+    ...postsResolvers.Mutation,
+    ...commentsResolvers.Mutation,
+  },
+  Subscription: {
+    ...postsResolvers.Subscription,
   },
 };
